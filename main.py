@@ -21,6 +21,7 @@ def main(screen):
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK) # for normal item
     curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE) # for selected item
     curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK) # for [ ]
+    curses.init_pair(4, curses.COLOR_MAGENTA, curses.COLOR_BLACK) # for [ ]
     
     # Initialize data variables
     base_x = 2
@@ -37,6 +38,12 @@ def main(screen):
         # Drawing UI
         screen.border()
         draw_text_logo(screen)
+        
+        row = f"Age{' ' * (max_spaces - len('Age'))}Birthdate"
+        screen.addstr(base_y, base_x, row, curses.color_pair(1))
+        
+        base_y += 1
+        
         for id, row in enumerate(data):
             x = base_x + max_age_chars + 5
             
@@ -44,6 +51,7 @@ def main(screen):
             birthdate = row[1]
             age = (datetime.now() - datetime.strptime(birthdate, "%d.%m.%Y")).days // 365
             next_age = age + 1
+            age_str = f"{age}"
             
             line = f"{name}{' ' * (max_spaces - len(name)) }{birthdate}"
             
