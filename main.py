@@ -7,7 +7,7 @@ def verify_necessary_files():
     if not path.exists():
         path.parent.mkdir(parents=True, exist_ok=True)
         path.touch(exist_ok=True)
-        pd.Series(name="birthday").to_csv(r"storage/data.csv", index_label="name")
+        pd.Series(name="birthdate").to_csv(r"storage/data.csv", index_label="name")
         
 def draw_text_logo(screen):
     screen.addstr(0, 2, " [", curses.color_pair(3))
@@ -22,20 +22,25 @@ def main(screen):
     curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK) # for [ ]
     
     # Initialize data variables
-    base_x = 2
-    base_y = 1
+    base_x = 3
+    base_y = 2
     
     curses.curs_set(0)    
     while True:
         # Getting data
-        data = pd.read_csv(r"storage/data.csv", index_col="name")
+        data = [x for x in pd.read_csv(r"storage/data.csv").values]
+        max_spaces = max(len(f"{item[0]}") for item in data)
+        max_spaces += 2 + max(len(f"{item[1]}") for item in data)
+        max_age_chars = len(str(len(data) - 1))
     
         # Drawing UI
         screen.border()
         draw_text_logo(screen)
-        
-        for id, name in enumerate(data.index):
-            screen.addstr(base_y + id, base_x, name, curses.color_pair(1))
+        for id, row in enumerate(data):
+            name = row[0]
+            birthdate = row[1]
+            line = f"{name}{' ' * (max_spaces - len(name)) }{birthdate}"
+            screen.addstr(base_y + id, base_x, line, curses.color_pair(1))
         
         # Getting clicked key
         key = screen.getch()
