@@ -1,6 +1,7 @@
 import pandas as pd
 import pathlib
 import curses
+from datetime import datetime
 
 def verify_necessary_files():
     path = pathlib.Path(r"storage/data.csv")
@@ -22,7 +23,7 @@ def main(screen):
     curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK) # for [ ]
     
     # Initialize data variables
-    base_x = 3
+    base_x = 2
     base_y = 2
     
     curses.curs_set(0)    
@@ -30,17 +31,24 @@ def main(screen):
         # Getting data
         data = [x for x in pd.read_csv(r"storage/data.csv").values]
         max_spaces = max(len(f"{item[0]}") for item in data)
-        max_spaces += 2 + max(len(f"{item[1]}") for item in data)
+        max_spaces += 2
         max_age_chars = len(str(len(data) - 1))
     
         # Drawing UI
         screen.border()
         draw_text_logo(screen)
         for id, row in enumerate(data):
+            x = base_x + max_age_chars + 5
+            
             name = row[0]
             birthdate = row[1]
+            age = (datetime.now() - datetime.strptime(birthdate, "%d.%m.%Y")).days // 365
+            next_age = age + 1
+            
             line = f"{name}{' ' * (max_spaces - len(name)) }{birthdate}"
-            screen.addstr(base_y + id, base_x, line, curses.color_pair(1))
+            
+            screen.addstr(base_y + id, x - 2 - max_age_chars + (max_age_chars - len(str(age))), str(age), curses.color_pair(3))
+            screen.addstr(base_y + id, x, line, curses.color_pair(1))
         
         # Getting clicked key
         key = screen.getch()
