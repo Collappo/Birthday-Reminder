@@ -1,36 +1,65 @@
-# Birthday Reminder
+# 🎂 Birthday Reminder
 
-A simple Python application to manage and remind you of upcoming birthdays.
+If u don't like upset your friends and prefer privacy, this repo is for u :D
 
-## Features
+## ✨ Features
 
-- Add, edit, and delete birthdays.
-- Automatic reminders via email or notifications.
-- Command-line interface for easy use.
-- Stores data in a local JSON file.
+- ➕ Add, edit, and delete birthdays effortlessly
+- 📧 Automatic reminders via notifications
+- 💻 CLI
+- 💾 Stores data in a local CSV file
+- 🚀 Fast and lightweight with modern Python tools
 
-## Installation
+---
+
+## 🛠️ Installation
+
+> ***Python version: 3.12 or higher***
+
+### Setup Project
+
+Optional way, install fast uv:
+
+```bash
+$ pip install uv
+```
 
 1. Clone the repository:
-    ```
-    git clone https://github.com/yourusername/birthday-reminder.git
-    cd birthday-reminder
-    ```
+   ```bash
+   git clone https://github.com/yourusername/birthday-reminder.git
+   cd birthday-reminder
+   ```
 
 2. Install dependencies:
-    ```
-    pip install -r requirements.txt
-    ```
+   ```bash
+   # if you have uv
+   $ uv sync
 
-## Usage
+   # or
+
+   $ pip install .
+   ```
+
+---
+
+## 🚀 Usage
+
+### Windows
+Run the application using build-in script:
+```console
+$ birthdays
+```
+
+### Linux/macOS
 
 Run the application:
-```
-python main.py
+
+```bash
+$ uv run main.py
 ```
 
-Follow the prompts to add birthdays and set reminders.
+---
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License.
