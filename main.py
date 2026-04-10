@@ -39,7 +39,7 @@ def main(screen):
         screen.border()
         draw_text_logo(screen)
         
-        row = f"Age{' ' * (max_spaces - len('Age'))}Birthdate"
+        row = f"Age    Name    Birthdate"
         screen.addstr(base_y, base_x, row, curses.color_pair(1))
         
         base_y += 1
