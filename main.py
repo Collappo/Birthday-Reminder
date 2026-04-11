@@ -21,13 +21,15 @@ def main(screen):
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK) # for normal item
     curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE) # for selected item
     curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK) # for [ ]
-    curses.init_pair(4, curses.COLOR_MAGENTA, curses.COLOR_BLACK) # for [ ]
+    curses.init_pair(4, curses.COLOR_MAGENTA, curses.COLOR_BLACK) # for >
+    curses.init_pair(5, curses.COLOR_YELLOW, curses.COLOR_BLACK) # for details
     
     # Initialize data variables
-    base_x = 2
-    base_y = 2
+    base_x = 4
+    base_y = 3
+    index = 0
     
-    curses.curs_set(0)    
+    curses.curs_set(0)
     while True:
         # Getting data
         data = [x for x in pd.read_csv(r"storage/data.csv").values]
@@ -40,9 +42,7 @@ def main(screen):
         draw_text_logo(screen)
         
         row = f"Age    Name    Birthdate"
-        screen.addstr(base_y, base_x, row, curses.color_pair(1))
-        
-        base_y += 1
+        screen.addstr(base_y - 1, base_x, row, curses.color_pair(1))
         
         for id, row in enumerate(data):
             x = base_x + max_age_chars + 5
@@ -52,17 +52,30 @@ def main(screen):
             age = (datetime.now() - datetime.strptime(birthdate, "%d.%m.%Y")).days // 365
             next_age = age + 1
             age_str = f"{age}"
-            
-            line = f"{name}{' ' * (max_spaces - len(name)) }{birthdate}"
-            
-            screen.addstr(base_y + id, x - 2 - max_age_chars + (max_age_chars - len(str(age))), str(age), curses.color_pair(3))
-            screen.addstr(base_y + id, x, line, curses.color_pair(1))
+                        
+            if id == index:
+                screen.addstr(base_y + id, x - max_age_chars - 6, ">", curses.color_pair(4))
+                screen.addstr(base_y + id, x - 2 - max_age_chars + (max_age_chars - len(str(age))), str(age), curses.color_pair(3))
+                screen.addstr(base_y + id, x, ' ' + name + ' ', curses.color_pair(2))
+                screen.addstr(base_y + id, x + len(name) + (max_spaces - len(name)) + 2, birthdate, curses.color_pair(1))
+            else:
+                screen.addstr(base_y + id, x - 2 - max_age_chars + (max_age_chars - len(str(age))), str(age), curses.color_pair(3))
+                screen.addstr(base_y + id, x, ' ' + name + ' ', curses.color_pair(1))
+                screen.addstr(base_y + id, x + len(name) + (max_spaces - len(name)) + 2, birthdate, curses.color_pair(1))
         
         # Getting clicked key
         key = screen.getch()
         
         if key == 440: # Alt + x to exit
             break
+        
+        elif key == curses.KEY_UP:
+            index = (index - 1) % len(data)
+            
+        elif key == curses.KEY_DOWN:
+            index = (index + 1) % len(data)
+            
+        screen.clear()
 
 if __name__ == "__main__":
     verify_necessary_files()
