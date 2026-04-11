@@ -5,11 +5,11 @@ If u don't like upset your friends and prefer privacy, this repo is for u :D
 ## ✨ Features
 
 - 📅 Upcomming birthdays indicator
-<!-- - ➕ Add, edit, and delete birthdays -->
-<!-- - 📧 Automatic reminders via notifications -->
 - 💻 CLI
 - 💾 Stores data in a local CSV file
 - 🚀 Fast and lightweight with modern Python tools
+<!-- - ➕ Add, edit, and delete birthdays -->
+<!-- - 📧 Automatic reminders via notifications -->
 
 ---
 
@@ -46,14 +46,22 @@ $ pip install uv
 ## 🚀 Usage
 
 ### Windows
-Run the application using build-in script:
+
+Run the application using this script, if you have *uv*:
 ```console
 $ birthdays
 ```
 
+else:
+
+```console
+$ .venv\Scripts\activate.bat
+$ python main.py
+```
+
 ### Linux/macOS
 
-Run the application:
+Run the application with uv:
 
 ```bash
 $ uv run main.py
