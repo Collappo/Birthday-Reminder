@@ -31,7 +31,7 @@ def main(screen):
     curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE) # for selected item
     curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK) # for [ ], age
     curses.init_pair(4, curses.COLOR_MAGENTA, curses.COLOR_BLACK) # for >, hotkeys
-    curses.init_pair(5, curses.COLOR_YELLOW, curses.COLOR_BLACK) # for incoming birthdays
+    curses.init_pair(5, curses.COLOR_YELLOW, curses.COLOR_BLACK) # for upcoming birthdays
     curses.init_pair(6, curses.COLOR_RED, curses.COLOR_BLACK) # for exit hotkey
     curses.init_pair(7, curses.COLOR_GREEN, curses.COLOR_BLACK) # for birthdays
     

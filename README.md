@@ -4,8 +4,9 @@ If u don't like upset your friends and prefer privacy, this repo is for u :D
 
 ## ✨ Features
 
-- ➕ Add, edit, and delete birthdays effortlessly
-- 📧 Automatic reminders via notifications
+- 📅 Upcomming birthdays indicator
+<!-- - ➕ Add, edit, and delete birthdays -->
+<!-- - 📧 Automatic reminders via notifications -->
 - 💻 CLI
 - 💾 Stores data in a local CSV file
 - 🚀 Fast and lightweight with modern Python tools
