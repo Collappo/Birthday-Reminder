@@ -67,20 +67,27 @@ def main(screen):
             left_days = (datetime.strptime(birthdate[:-4] + str(datetime.now().year), "%d.%m.%Y") - datetime.strptime(f"{datetime.now().day}.{datetime.now().month}.{datetime.now().year}", "%d.%m.%Y")).days
             
             color_for_birthdate = 1
+            info = f" - in {left_days} days"
+            
             if left_days <= 30 and left_days > 0:
                 color_for_birthdate = 5
+                
             elif left_days == 0:
                 color_for_birthdate = 7
+                info = " - TODAY!"
+            
+            else:
+                info = ""
                                     
             if id == index:
                 screen.addstr(base_y + id, x - max_age_chars - 4, ">", curses.color_pair(4))
                 screen.addstr(base_y + id, x - 2 - max_age_chars + (max_age_chars - len(str(age))), str(age), curses.color_pair(3))
                 screen.addstr(base_y + id, x, ' ' + name + ' ', curses.color_pair(2))
-                screen.addstr(base_y + id, x + len(name) + (max_spaces - len(name)) + 2, birthdate, curses.color_pair(color_for_birthdate))
+                screen.addstr(base_y + id, x + len(name) + (max_spaces - len(name)) + 2, birthdate + info, curses.color_pair(color_for_birthdate))
             else:
                 screen.addstr(base_y + id, x - 2 - max_age_chars + (max_age_chars - len(str(age))), str(age), curses.color_pair(3))
                 screen.addstr(base_y + id, x, ' ' + name + ' ', curses.color_pair(1))
-                screen.addstr(base_y + id, x + len(name) + (max_spaces - len(name)) + 2, birthdate, curses.color_pair(color_for_birthdate))
+                screen.addstr(base_y + id, x + len(name) + (max_spaces - len(name)) + 2, birthdate + info, curses.color_pair(color_for_birthdate))
         
         draw_hotkeys(screen)
         
