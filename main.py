@@ -20,7 +20,7 @@ def draw_hotkeys(screen):
     
     # Functional hotkeys
     screen.addstr(h - 3, 2, "Navigate: Up/Down", curses.color_pair(4))
-    screen.addstr(h - 3, 22, "Edit: Enter", curses.color_pair(4))
+    screen.addstr(h - 3, 22, "Edit/Select: Enter", curses.color_pair(4))
 
     # Exit hotkey
     screen.addstr(h - 2, 2, "Exit: Alt + X", curses.color_pair(6))
@@ -157,7 +157,7 @@ def main(screen):
                 left_days = (datetime.strptime(birthdate[:-4] + str(datetime.now().year), "%d.%m.%Y") - datetime.strptime(f"{datetime.now().day}.{datetime.now().month}.{datetime.now().year}", "%d.%m.%Y")).days
                 
                 color_for_birthdate = 1
-                info = f" - in {left_days} days"
+                info = f" - in {left_days} day(s)"
                 
                 if left_days <= 30 and left_days > 0:
                     color_for_birthdate = 5
