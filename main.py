@@ -25,41 +25,77 @@ def draw_hotkeys(screen):
     # Exit hotkey
     screen.addstr(h - 2, 2, "Exit: Alt + X", curses.color_pair(6))
 
-def input_field(screen, prompt, text=""):
+def draw_input(screen, prompt, text=""):
     h, w = screen.getmaxyx()
-    edit_win_h, edit_win_w = 9, 60
+
+    # Create a window for editing with a border
+    edit_win_h, edit_win_w = 8, 60
     edit_win = curses.newwin(
         edit_win_h, edit_win_w, h // 2 - edit_win_h // 2 - 1, w // 2 - edit_win_w // 2
     )
     edit_win.border(0)
-    
-    edit_win.addstr(1, edit_win_w // 2 - len(prompt) // 2, prompt)
-    input_str = text
-    cursor_pos = len(input_str)
+
+    # Prompt in the window
+    edit_win.addstr(1, edit_win_w // 2 - len(prompt) // 2, prompt, curses.color_pair(1))
+    edit_win.addstr(3, 2, text, curses.color_pair(2))
+    edit_win.addstr(5, 2, "Press Enter to save", curses.color_pair(4))
+    edit_win.addstr(6, 2, "Press ESC to cancel", curses.color_pair(4))
+    edit_win.refresh()
+
+    curses.curs_set(1)  # Show the cursor
+    edit_win.move(3, 2 + len(text))  # Move cursor to the end of the text
+    current_text = list(text)  # Convert text to a list for easier manipulation
+    cursor_pos = len(current_text)
+
     while True:
-        edit_win.addstr(2, 2, " " * (edit_win_w - 4), curses.color_pair(2))  # clear line
-        edit_win.addstr(2, 3, input_str, curses.color_pair(2))
-        edit_win.move(2, 3 + cursor_pos)
-        edit_win.refresh()
-        key = screen.getch()
-        if key == curses.KEY_ENTER or key in [10, 13]:  # Enter
-            break
-        elif key == 27:  # Escape
-            return None
-        elif key == curses.KEY_BACKSPACE or key == 8:
+        key = edit_win.getch()
+
+        if key in (curses.KEY_ENTER, 10, 13):  # Enter key to save
+            curses.curs_set(0)  # Hide cursor again
+            return "".join(current_text)
+
+        elif key == 27:  # ESC key to cancel the edit
+            curses.curs_set(0)  # Hide cursor again
+            return text  # Return the original text unchanged
+
+        elif key in (curses.KEY_BACKSPACE, 127, 8):  # Backspace to delete a character
             if cursor_pos > 0:
-                input_str = input_str[:cursor_pos-1] + input_str[cursor_pos:]
+                del current_text[cursor_pos - 1]
                 cursor_pos -= 1
-        elif key == curses.KEY_LEFT:
+
+        elif (
+            key == curses.KEY_DC
+        ):  # Delete key to delete the character under the cursor
+            if cursor_pos < len(current_text):
+                del current_text[cursor_pos]
+
+        elif key == curses.KEY_LEFT:  # Move cursor left
             if cursor_pos > 0:
                 cursor_pos -= 1
-        elif key == curses.KEY_RIGHT:
-            if cursor_pos < len(input_str):
+
+        elif key == curses.KEY_RIGHT:  # Move cursor right
+            if cursor_pos < len(current_text):
                 cursor_pos += 1
-        elif 32 <= key <= 126:  # printable
-            input_str = input_str[:cursor_pos] + chr(key) + input_str[cursor_pos:]
+
+        elif key == curses.KEY_HOME or key == 443:  # Move cursor to the start of the line
+            cursor_pos = 0
+
+        elif key == curses.KEY_END or key == 444:  # Move cursor to the end of the line
+            cursor_pos = len(current_text)
+
+        elif 32 <= key <= 126:  # Insert a printable character
+            current_text.insert(cursor_pos, chr(key))
             cursor_pos += 1
-    return input_str
+
+        # Update the window with the current text and move the cursor
+        edit_win.addstr(
+            3,
+            2,
+            "".join(current_text) + " " * (edit_win_w - 4 - len(current_text)),
+            curses.color_pair(2),
+        )
+        edit_win.move(3, 2 + cursor_pos)
+        edit_win.refresh()
 
 def main(screen):
     # Initialize color pairs
@@ -166,13 +202,13 @@ def main(screen):
                 birthdate = ""
             
             # edit name
-            new_name = input_field(screen, "Enter name:", name)
+            new_name = draw_input(screen, "Enter name:", name)
             if new_name is None:
                 screen.clear()
                 continue
             
             # edit birthdate
-            new_birthdate = input_field(screen, "Enter birthdate (dd.mm.yyyy):", birthdate)
+            new_birthdate = draw_input(screen, "Enter birthdate (dd.mm.yyyy):", birthdate)
             if new_birthdate is None:
                 screen.clear()
                 continue

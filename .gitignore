@@ -12,6 +12,7 @@ wheels/
 # Tests
 *.ipynb
 run.cmd
+test.py
 
 # Data files
 storage/
