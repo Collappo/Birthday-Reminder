@@ -25,6 +25,42 @@ def draw_hotkeys(screen):
     # Exit hotkey
     screen.addstr(h - 2, 2, "Exit: Alt + X", curses.color_pair(6))
 
+def input_field(screen, prompt, text=""):
+    h, w = screen.getmaxyx()
+    edit_win_h, edit_win_w = 9, 60
+    edit_win = curses.newwin(
+        edit_win_h, edit_win_w, h // 2 - edit_win_h // 2 - 1, w // 2 - edit_win_w // 2
+    )
+    edit_win.border(0)
+    
+    edit_win.addstr(1, edit_win_w // 2 - len(prompt) // 2, prompt)
+    input_str = text
+    cursor_pos = len(input_str)
+    while True:
+        edit_win.addstr(2, 2, " " * (edit_win_w - 4), curses.color_pair(2))  # clear line
+        edit_win.addstr(2, 3, input_str, curses.color_pair(2))
+        edit_win.move(2, 3 + cursor_pos)
+        edit_win.refresh()
+        key = screen.getch()
+        if key == curses.KEY_ENTER or key in [10, 13]:  # Enter
+            break
+        elif key == 27:  # Escape
+            return None
+        elif key == curses.KEY_BACKSPACE or key == 8:
+            if cursor_pos > 0:
+                input_str = input_str[:cursor_pos-1] + input_str[cursor_pos:]
+                cursor_pos -= 1
+        elif key == curses.KEY_LEFT:
+            if cursor_pos > 0:
+                cursor_pos -= 1
+        elif key == curses.KEY_RIGHT:
+            if cursor_pos < len(input_str):
+                cursor_pos += 1
+        elif 32 <= key <= 126:  # printable
+            input_str = input_str[:cursor_pos] + chr(key) + input_str[cursor_pos:]
+            cursor_pos += 1
+    return input_str
+
 def main(screen):
     # Initialize color pairs
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK) # for normal item
@@ -45,10 +81,15 @@ def main(screen):
         # Getting data
         data = [x for x in pd.read_csv(r"storage/data.csv").values]
 
-        max_spaces = max(len(f"{item[0]}") for item in data)
-        max_spaces += 2
-        # max_age_chars = len(str(len(data) - 1)) + len(" -> ")
-        max_age_chars = max(len(f"{(datetime.now() - datetime.strptime(item[1], "%d.%m.%Y")).days // 365}") for item in data)
+        # Calculate max spaces for name
+        names = [item[0] for item in data] + ["Add new person"]
+        max_spaces = max(len(name) for name in names) + 2 if names else 16
+
+        # Calculate max age chars
+        if data:
+            max_age_chars = max(len(str((datetime.now() - datetime.strptime(item[1], "%d.%m.%Y")).days // 365)) for item in data)
+        else:
+            max_age_chars = 2  # for "Add new person", no age
     
         # Drawing UI
         screen.border()
@@ -58,36 +99,47 @@ def main(screen):
         screen.addstr(base_y - 2, base_x + max_age_chars + 6, "Name", curses.color_pair(1))
         screen.addstr(base_y - 2, base_x + max_age_chars + 7 + max_spaces, "Birthdate", curses.color_pair(5))
         
-        for id, row in enumerate(data):
+        for id, row in enumerate(data + [None]):  # Add None for "Add new person"
             x = base_x + max_age_chars + 5
+            y_pos = base_y + id if id < len(data) else base_y + id + 1
             
-            name = row[0]
-            birthdate = row[1]
-            age = (datetime.now() - datetime.strptime(birthdate, "%d.%m.%Y")).days // 365
-            left_days = (datetime.strptime(birthdate[:-4] + str(datetime.now().year), "%d.%m.%Y") - datetime.strptime(f"{datetime.now().day}.{datetime.now().month}.{datetime.now().year}", "%d.%m.%Y")).days
-            
-            color_for_birthdate = 1
-            info = f" - in {left_days} days"
-            
-            if left_days <= 30 and left_days > 0:
-                color_for_birthdate = 5
+            if id < len(data):
+                name = row[0]
+                birthdate = row[1]
+                age = (datetime.now() - datetime.strptime(birthdate, "%d.%m.%Y")).days // 365
+                left_days = (datetime.strptime(birthdate[:-4] + str(datetime.now().year), "%d.%m.%Y") - datetime.strptime(f"{datetime.now().day}.{datetime.now().month}.{datetime.now().year}", "%d.%m.%Y")).days
                 
-            elif left_days == 0:
-                color_for_birthdate = 7
-                info = " - TODAY!"
-            
+                color_for_birthdate = 1
+                info = f" - in {left_days} days"
+                
+                if left_days <= 30 and left_days > 0:
+                    color_for_birthdate = 5
+                    
+                elif left_days == 0:
+                    color_for_birthdate = 7
+                    info = " - TODAY!"
+                
+                else:
+                    info = ""
             else:
+                # Add new person
+                name = "Add new person"
+                birthdate = ""
+                age = ""
+                color_for_birthdate = 1
                 info = ""
                                     
             if id == index:
-                screen.addstr(base_y + id, x - max_age_chars - 4, ">", curses.color_pair(4))
-                screen.addstr(base_y + id, x - 2 - max_age_chars + (max_age_chars - len(str(age))), str(age), curses.color_pair(3))
-                screen.addstr(base_y + id, x, ' ' + name + ' ', curses.color_pair(2))
-                screen.addstr(base_y + id, x + len(name) + (max_spaces - len(name)) + 2, birthdate + info, curses.color_pair(color_for_birthdate))
+                screen.addstr(y_pos, x - max_age_chars - 4, ">", curses.color_pair(4))
+                if id < len(data):
+                    screen.addstr(y_pos, x - 2 - max_age_chars + (max_age_chars - len(str(age))), str(age), curses.color_pair(3))
+                screen.addstr(y_pos, x, ' ' + name + ' ', curses.color_pair(2))
+                screen.addstr(y_pos, x + len(name) + (max_spaces - len(name)) + 2, birthdate + info, curses.color_pair(color_for_birthdate))
             else:
-                screen.addstr(base_y + id, x - 2 - max_age_chars + (max_age_chars - len(str(age))), str(age), curses.color_pair(3))
-                screen.addstr(base_y + id, x, ' ' + name + ' ', curses.color_pair(1))
-                screen.addstr(base_y + id, x + len(name) + (max_spaces - len(name)) + 2, birthdate + info, curses.color_pair(color_for_birthdate))
+                if id < len(data):
+                    screen.addstr(y_pos, x - 2 - max_age_chars + (max_age_chars - len(str(age))), str(age), curses.color_pair(3))
+                screen.addstr(y_pos, x, ' ' + name + ' ', curses.color_pair(1))
+                screen.addstr(y_pos, x + len(name) + (max_spaces - len(name)) + 2, birthdate + info, curses.color_pair(color_for_birthdate))
         
         draw_hotkeys(screen)
         
@@ -98,10 +150,53 @@ def main(screen):
             break
         
         elif key == curses.KEY_UP:
-            index = (index - 1) % len(data)
+            index = (index - 1) % (len(data) + 1)
             
         elif key == curses.KEY_DOWN:
-            index = (index + 1) % len(data)
+            index = (index + 1) % (len(data) + 1)
+            
+        elif key == curses.KEY_ENTER or key in [10, 13]: # Enter to edit
+            if index < len(data):
+                # edit existing
+                name = data[index][0]
+                birthdate = data[index][1]
+            else:
+                # add new
+                name = ""
+                birthdate = ""
+            
+            # edit name
+            new_name = input_field(screen, "Enter name:", name)
+            if new_name is None:
+                screen.clear()
+                continue
+            
+            # edit birthdate
+            new_birthdate = input_field(screen, "Enter birthdate (dd.mm.yyyy):", birthdate)
+            if new_birthdate is None:
+                screen.clear()
+                continue
+            
+            # validate birthdate
+            try:
+                datetime.strptime(new_birthdate, "%d.%m.%Y")
+            except ValueError:
+                # invalid, show error
+                screen.addstr(center_y + 2, center_x, "Invalid date format!", curses.color_pair(6))
+                screen.getch()
+                screen.clear()
+                continue
+            
+            # update data
+            if index < len(data):
+                data[index] = [new_name, new_birthdate]
+            else:
+                data.append([new_name, new_birthdate])
+            
+            # save to csv
+            df = pd.DataFrame(data, columns=['name', 'birthdate'])
+            df.to_csv(r"storage/data.csv", index=False)
+            screen.clear()
             
         screen.clear()
 
