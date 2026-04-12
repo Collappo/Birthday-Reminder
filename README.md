@@ -2,7 +2,7 @@
 
 If u don't like upset your friends and prefer privacy, this repo is for u :D
 
-[Example](.docs\example.png)
+![Example](.docs\example.png)
 
 ## ✨ Features
 
