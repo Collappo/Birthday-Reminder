@@ -4,12 +4,12 @@ If u don't like upset your friends and prefer privacy, this repo is for u :D
 
 ## ✨ Features
 
-- 📅 Upcomming birthdays indicator
-- 💻 CLI
-- 💾 Stores data in a local CSV file
-- 🚀 Fast and lightweight with modern Python tools
-<!-- - ➕ Add, edit, and delete birthdays -->
-<!-- - 📧 Automatic reminders via notifications -->
+- Upcomming birthdays indicator
+- CLI
+- Stores data in a local CSV file
+- Fast and lightweight with modern Python tools
+<!-- - Add, edit, and delete birthdays -->
+<!-- - Automatic reminders via notifications -->
 
 ---
 
@@ -43,7 +43,7 @@ $ pip install uv
 
 ---
 
-## 🚀 Usage
+## Usage
 
 ### Windows
 
