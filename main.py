@@ -24,22 +24,33 @@ def draw_hotkeys(screen):
 
     # Exit hotkey
     screen.addstr(h - 2, 2, "Exit: Alt + X", curses.color_pair(6))
+    
+def draw_warning(screen, message):
+    h, w = screen.getmaxyx()
+    
+    warning_win_h, warning_win_w = 5, len(message) + 10
+    warning_win = curses.newwin(
+        warning_win_h, warning_win_w, h // 2 - warning_win_h // 2 - 1, w // 2 - warning_win_w // 2
+    )
+    warning_win.border()
+    
+    warning_win .addstr(1, warning_win_w // 2 - len(message) // 2, message, curses.color_pair(6))
+    warning_win .addstr(3, 2, "Skip: Enter", curses.color_pair(4))
+    
+    warning_win.getch()
 
 def draw_input(screen, prompt, text=""):
     h, w = screen.getmaxyx()
 
-    # Create a window for editing with a border
     edit_win_h, edit_win_w = 8, 60
     edit_win = curses.newwin(
         edit_win_h, edit_win_w, h // 2 - edit_win_h // 2 - 1, w // 2 - edit_win_w // 2
     )
-    edit_win.border(0)
-
-    # Prompt in the window
+    edit_win.border()
     edit_win.addstr(1, edit_win_w // 2 - len(prompt) // 2, prompt, curses.color_pair(1))
     edit_win.addstr(3, 2, text, curses.color_pair(2))
-    edit_win.addstr(5, 2, "Press Enter to save", curses.color_pair(4))
-    edit_win.addstr(6, 2, "Press ESC to cancel", curses.color_pair(4))
+    edit_win.addstr(5, 2, "Save: Enter", curses.color_pair(4))
+    edit_win.addstr(6, 2, "Cancel: Esc", curses.color_pair(4))
     edit_win.refresh()
 
     curses.curs_set(1)  # Show the cursor
@@ -58,7 +69,7 @@ def draw_input(screen, prompt, text=""):
             curses.curs_set(0)  # Hide cursor again
             return text  # Return the original text unchanged
 
-        elif key in (curses.KEY_BACKSPACE, 127, 8):  # Backspace to delete a character
+        elif key in (curses.KEY_BACKSPACE, 127, 8):
             if cursor_pos > 0:
                 del current_text[cursor_pos - 1]
                 cursor_pos -= 1
@@ -104,7 +115,7 @@ def main(screen):
     curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK) # for [ ], age
     curses.init_pair(4, curses.COLOR_MAGENTA, curses.COLOR_BLACK) # for >, hotkeys
     curses.init_pair(5, curses.COLOR_YELLOW, curses.COLOR_BLACK) # for upcoming birthdays
-    curses.init_pair(6, curses.COLOR_RED, curses.COLOR_BLACK) # for exit hotkey
+    curses.init_pair(6, curses.COLOR_RED, curses.COLOR_BLACK) # for exit hotkey, warnings
     curses.init_pair(7, curses.COLOR_GREEN, curses.COLOR_BLACK) # for birthdays
     
     # Initialize data variables
@@ -217,10 +228,8 @@ def main(screen):
             try:
                 datetime.strptime(new_birthdate, "%d.%m.%Y")
             except ValueError:
-                # invalid, show error
-                screen.addstr(center_y + 2, center_x, "Invalid date format!", curses.color_pair(6))
-                screen.getch()
-                screen.clear()
+                # invalid
+                draw_warning(screen, "Invalid date format!")
                 continue
             
             # update data
