@@ -2,7 +2,7 @@
 
 If u don't like upset your friends and prefer privacy, this repo is for u :D
 
-![Example](https://github.com/Collappo/Birthday-Reminder/blob/main/.docs/example.png)
+> ![Example](https://github.com/Collappo/Birthday-Reminder/blob/main/.docs/example.png)
 > What it looks like? - example image.
 
 ## ✨ Features
