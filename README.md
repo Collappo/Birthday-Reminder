@@ -8,7 +8,7 @@ Example data
 ## ✨ Features
 
 - Upcomming birthdays indicator
-- CLI
+- TUI
 - Stores data in a local CSV file
 - Fast and lightweight with modern Python tools
 <!-- - Add, edit, and delete birthdays -->
