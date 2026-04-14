@@ -59,6 +59,8 @@ If u don't like upset your friends and prefer privacy, this repo is for u :D
 Run the application using global command:
 ```console
 birthdays
+# or
+bds
 ```
 
 else locally:
