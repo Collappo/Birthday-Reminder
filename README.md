@@ -41,6 +41,7 @@ If u don't like upset your friends and prefer privacy, this repo is for u :D
 
    ```console
    uv tool install .
+   uv tool update-shell
    ```
 
 4. If you have problems, install locally:
