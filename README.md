@@ -37,7 +37,13 @@ If u don't like upset your friends and prefer privacy, this repo is for u :D
 
    https://docs.astral.sh/uv/getting-started/installation/
 
-3. Install dependencies:
+3. Build project:
+
+   ```console
+   uv tool install .
+   ```
+
+4. If you have problems, install locally:
 
    ```console
    uv sync
@@ -49,12 +55,12 @@ If u don't like upset your friends and prefer privacy, this repo is for u :D
 
 ### Windows
 
-Run the application using this script:
+Run the application using global command:
 ```console
 birthdays
 ```
 
-else:
+else locally:
 
 ```console
 $ .venv\Scripts\activate.bat

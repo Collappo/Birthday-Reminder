@@ -13,7 +13,7 @@ resolution-markers = [
 [[package]]
 name = "birthday-reminder"
 version = "0.0.1"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "pandas" },
     { name = "windows-curses" },
