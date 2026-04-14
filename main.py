@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 import pathlib
 import curses
 from datetime import datetime
@@ -246,7 +247,10 @@ def app(screen):
         screen.clear()
         
 def main():
+    BASE_DIR = pathlib.Path(__file__).resolve().parent
+    os.chdir(BASE_DIR)
     verify_necessary_files()
     curses.wrapper(app)
+    
 if __name__ == "__main__":
     main()

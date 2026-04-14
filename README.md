@@ -40,7 +40,7 @@ If u don't like upset your friends and prefer privacy, this repo is for u :D
 3. Build project:
 
    ```console
-   uv tool install .
+   uv tool install --editable .
    uv tool update-shell
    ```
 
