@@ -22,26 +22,25 @@ If u don't like upset your friends and prefer privacy, this repo is for u :D
 
 ### Setup Project
 
-Optional way, install fast uv:
-
-```bash
-$ pip install uv
-```
-
 1. Clone the repository:
-   ```bash
+
+   ```console
    git clone https://github.com/yourusername/birthday-reminder.git
    cd birthday-reminder
    ```
 
-2. Install dependencies:
-   ```bash
-   # if you have uv
-   $ uv sync
+2. Install ***uv***:
 
-   # or
+   ```console
+   pip install uv
+   ```
 
-   $ pip install .
+   https://docs.astral.sh/uv/getting-started/installation/
+
+3. Install dependencies:
+
+   ```console
+   uv sync
    ```
 
 ---
@@ -50,16 +49,16 @@ $ pip install uv
 
 ### Windows
 
-Run the application using this script, if you have *uv*:
+Run the application using this script:
 ```console
-$ birthdays
+birthdays
 ```
 
 else:
 
 ```console
 $ .venv\Scripts\activate.bat
-$ python main.py
+$ uv run main.py
 ```
 
 <!-- ### Linux/macOS
