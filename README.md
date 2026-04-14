@@ -25,7 +25,7 @@ If u don't like upset your friends and prefer privacy, this repo is for u :D
 1. Clone the repository:
 
    ```console
-   git clone https://github.com/yourusername/birthday-reminder.git
+   git clone https://github.com/Collappo/birthday-reminder.git
    cd birthday-reminder
    ```
 
