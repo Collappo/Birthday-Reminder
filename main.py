@@ -108,7 +108,7 @@ def draw_input(screen, prompt, text=""):
         edit_win.move(3, 2 + cursor_pos)
         edit_win.refresh()
 
-def main(screen):
+def app(screen):
     # Initialize color pairs
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK) # for normal item
     curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE) # for selected item
@@ -244,7 +244,9 @@ def main(screen):
             screen.clear()
             
         screen.clear()
-
-if __name__ == "__main__":
+        
+def main():
     verify_necessary_files()
-    curses.wrapper(main)
+    curses.wrapper(app)
+if __name__ == "__main__":
+    main()
