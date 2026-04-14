@@ -62,13 +62,13 @@ $ .venv\Scripts\activate.bat
 $ python main.py
 ```
 
-### Linux/macOS
+<!-- ### Linux/macOS
 
 Run the application with uv:
 
 ```bash
 $ uv run main.py
-```
+``` -->
 
 ---
 
